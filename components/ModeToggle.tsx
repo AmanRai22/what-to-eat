@@ -1,12 +1,8 @@
 "use client";
 
-import type { Mode } from "@/lib/data";
+import { MODE_THEME, type Mode } from "@/lib/data";
 
-const MODES: { id: Mode; label: string }[] = [
-  { id: "eatOut", label: "Eat Out" },
-  { id: "orderIn", label: "Order In" },
-  { id: "cook", label: "Cook" },
-];
+const MODES: Mode[] = ["eatOut", "orderIn", "cook"];
 
 export function ModeToggle({
   mode,
@@ -21,26 +17,28 @@ export function ModeToggle({
     <div
       role="tablist"
       aria-label="Mode"
-      className="inline-flex w-full max-w-md rounded-full border border-black/10 bg-black/5 p-1 text-sm font-medium dark:border-white/10 dark:bg-white/5"
+      className="inline-flex w-full max-w-xl items-center gap-1 rounded-full border border-black/10 bg-white/70 p-1 text-sm font-semibold shadow-md backdrop-blur dark:border-white/10 dark:bg-white/[0.06]"
     >
       {MODES.map((m) => {
-        const active = m.id === mode;
+        const theme = MODE_THEME[m];
+        const active = m === mode;
         return (
           <button
-            key={m.id}
+            key={m}
             role="tab"
             aria-selected={active}
             disabled={disabled}
-            onClick={() => onChange(m.id)}
+            onClick={() => onChange(m)}
             className={[
-              "flex-1 rounded-full px-4 py-2 transition",
+              "flex flex-1 items-center justify-center gap-2 rounded-full px-3 py-2.5 transition sm:px-4",
               active
-                ? "bg-white text-black shadow-sm dark:bg-white dark:text-black"
-                : "text-black/60 hover:text-black dark:text-white/60 dark:hover:text-white",
+                ? `bg-gradient-to-r ${theme.gradient} text-white shadow-lg`
+                : "text-black/60 hover:bg-black/5 hover:text-black dark:text-white/60 dark:hover:bg-white/10 dark:hover:text-white",
               disabled ? "cursor-not-allowed opacity-50" : "cursor-pointer",
             ].join(" ")}
           >
-            {m.label}
+            <span className="text-base sm:text-lg">{theme.emoji}</span>
+            <span>{theme.label}</span>
           </button>
         );
       })}

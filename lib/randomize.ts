@@ -19,7 +19,22 @@ export function pickRandomDifferent<T extends { name: string }>(
   return pick;
 }
 
+// Bias toward items marked `preferred: true` while still allowing the
+// rest of the pool through. Default: 75% draw from preferred-only.
+export function pickPreferred<T extends { name: string; preferred?: boolean }>(
+  items: readonly T[],
+  current: T | null,
+  preferredBias = 0.75,
+): T {
+  const preferred = items.filter((i) => i.preferred);
+  if (preferred.length === 0) return pickRandomDifferent(items, current);
+  const usePreferred = Math.random() < preferredBias;
+  return pickRandomDifferent(usePreferred ? preferred : items, current);
+}
+
 // Substring/tag fallback when the LLM filter fails or returns empty.
+// Negation prefix ("no rice" / "no-rice") drops items whose haystack
+// contains the negated term.
 export function localFilter<T extends { name: string; tags: string[]; cuisine?: string }>(
   items: readonly T[],
   hint: string,
