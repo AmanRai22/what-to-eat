@@ -9,7 +9,7 @@ type Body = {
   mode: "eatOut" | "orderIn" | "cook";
   hint: string;
   candidates: Candidate[];
-};
+}
 
 const SYSTEM_PROMPT = `You are a filter. Given a list of options with tags and a user hint, return a JSON array of the names of options that best match the hint, ranked best-first. Return at most 5. Output ONLY a JSON array of strings — no prose, no markdown fences.`;
 
